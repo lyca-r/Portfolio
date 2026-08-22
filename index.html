@@ -620,15 +620,70 @@ function renderCredentials(){
   });
 }
 
+function isPdf(path){ return /\.pdf$/i.test(path); }
+
+function renderCredentials(){
+  const grid = document.getElementById('cred-grid');
+  grid.innerHTML = '';
+  CREDENTIALS.forEach((cred) => {
+    const primary = cred.files && cred.files[0] ? cred.files[0].path : '';
+    const card = document.createElement('div');
+    card.className = 'cred-card';
+    card.innerHTML = `
+      <div class="cred-seal">${cred.files && cred.files.length > 1 ? cred.files.length + ' DOCS' : 'CERT'}</div>
+      <div class="cred-thumb">
+        ${isPdf(primary)
+          ? `<div class="fallback">PDF document<br>${cred.files[0].label}</div>`
+          : `<img src="${primary}" alt="${cred.title}"
+               onerror="this.style.display='none'; this.parentElement.querySelector('.fallback').style.display='block';">
+             <div class="fallback" style="display:none;">Add file at<br>${primary}</div>`
+        }
+      </div>
+      <h3 class="cred-title">${cred.title}</h3>
+      <p class="cred-issuer">${cred.issuer}</p>
+      <p class="cred-date">${cred.date}</p>
+    `;
+    card.addEventListener('click', () => openModal(cred));
+    grid.appendChild(card);
+  });
+}
+
 function openModal(cred){
   document.getElementById('modal-title').textContent = cred.title;
   document.getElementById('modal-issuer').textContent = cred.issuer;
   document.getElementById('modal-date').textContent = cred.date;
 
   const media = document.getElementById('modal-media');
-  media.innerHTML = isPdf(cred.file)
-    ? `<embed src="${cred.file}" type="application/pdf" height="480">`
-    : `<img src="${cred.file}" alt="${cred.title}" onerror="this.replaceWith(Object.assign(document.createElement('p'), {className:'meta', textContent:'Add the certificate file at ${cred.file}'}))">`;
+  media.innerHTML = '';
+  (cred.files || []).forEach(f => {
+    const block = document.createElement('div');
+    block.style.marginTop = '16px';
+    const label = document.createElement('p');
+    label.className = 'meta';
+    label.style.marginBottom = '4px';
+    label.textContent = f.label || 'Document';
+    block.appendChild(label);
+
+    if (isPdf(f.path)) {
+      const embed = document.createElement('embed');
+      embed.src = f.path;
+      embed.type = 'application/pdf';
+      embed.height = 420;
+      block.appendChild(embed);
+    } else {
+      const img = document.createElement('img');
+      img.src = f.path;
+      img.alt = f.label || cred.title;
+      img.onerror = () => {
+        const p = document.createElement('p');
+        p.className = 'meta';
+        p.textContent = `Add the file at ${f.path}`;
+        img.replaceWith(p);
+      };
+      block.appendChild(img);
+    }
+    media.appendChild(block);
+  });
 
   const verify = document.getElementById('modal-verify');
   if (cred.verifyUrl) {
