@@ -560,29 +560,42 @@
    ============================================================ */
 const CREDENTIALS = [
   {
-    title: "AWS Certified Solutions Architect",
-    issuer: "Amazon Web Services",
-    date: "2025",
-    file: "certificates/aws-solutions-architect.png",
-    verifyUrl: ""
-  },
-  {
-    title: "Project Management Professional (PMP)",
-    issuer: "Project Management Institute",
+    title: "Risk Based Internal Auditing",
+    issuer: "Center Internal Advisory Services Philippines",
     date: "2024",
-    file: "certificates/pmp.png",
-    verifyUrl: ""
+    verifyUrl: "",
+    files: [
+      { label: "Certificate", path: "certificates/Risk-Based-Internal-Auditing.jpg" }
+    ]
   },
   {
-    title: "Google Data Analytics Certificate",
-    issuer: "Google / Coursera",
-    date: "2023",
-    file: "certificates/google-data-analytics.png",
-    verifyUrl: ""
+    title: "QuickBooks Online Accountant Certification",
+    issuer: "Intuit QuickBooks",
+    date: "2024",
+    verifyUrl: "",
+    files: [
+      { label: "Certificate", path: "certificates/QuickBooks-Online-Certification.pdf" }
+    ]
+  },
+  {
+    title: "Certified Tax Technician",
+    issuer: "Philippine Association of Certified Tax Technician, Inc.",
+    date: "2026",
+    verifyUrl: "",
+    files: [
+      { label: "Certificate", path: "certificates/Certified-Tax-Technician.jpg" }
+    ]
+  },
+  {
+    title: "Certificate Holder in ISO/IEC 27001:2022 Foundation",
+    issuer: "Professional Evaluation and Certification Board",
+    date: "2025",
+    verifyUrl: "",
+    files: [
+      { label: "Certificate", path: "certificates/ISO-27001-2022-Foundation-Certificate.pdf" }
+    ]
   }
-  // Add more certificates here, following the same shape.
 ];
-
 function isPdf(file){ return /\.pdf$/i.test(file); }
 
 function renderCredentials(){
